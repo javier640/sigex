@@ -9,9 +9,11 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "dotenv": "^18.0.6",
     "next": "16.4.0",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "@prisma/client": "^6.17.1"
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",
@@ -22,6 +24,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.4.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "prisma": "^6.17.1"
   }
 }
