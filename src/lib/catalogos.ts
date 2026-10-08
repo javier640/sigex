@@ -7,6 +7,7 @@
 import type { EstatusExpediente, PrioridadExpediente } from "@prisma/client";
 
 export const ORDEN_ESTATUS: readonly EstatusExpediente[] = ["abierto", "en_revision", "cerrado"];
+export const ORDEN_PRIORIDAD: readonly PrioridadExpediente[] = ["baja", "media", "alta", "urgente"];
 
 export const ESTATUS: Record<EstatusExpediente, { etiqueta: string; color: string; insignia: string }> = {
   abierto: { etiqueta: "Abierto", color: "bg-sky-500", insignia: "bg-sky-50 text-sky-800 ring-sky-600/20" },
