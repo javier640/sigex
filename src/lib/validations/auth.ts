@@ -16,7 +16,8 @@ export const TOKEN_RECUPERACION_REGEX = /^[A-Za-z0-9_-]{43}$/;
 
 export const DESCRIPCION_POLITICA_PASSWORD = `Mínimo ${PASSWORD_MIN} caracteres, con al menos una letra y un número.`;
 
-const email = z
+/** Correo normalizado: sin espacios y en minúsculas. */
+export const emailSchema = z
   .string({ error: "Ingresa tu correo." })
   .trim()
   .toLowerCase()
@@ -37,7 +38,7 @@ export const passwordNuevaSchema = z
 // ─────────────────────────────────────────────
 
 export const loginSchema = z.object({
-  email,
+  email: emailSchema,
   // En el login no se aplica la política de longitud mínima: solo se
   // verifica que venga algo. La política se aplica al crear o cambiar.
   password: z
@@ -52,7 +53,7 @@ export type LoginInput = z.infer<typeof loginSchema>;
 // Recuperación de contraseña
 // ─────────────────────────────────────────────
 
-export const recuperarSchema = z.object({ email });
+export const recuperarSchema = z.object({ email: emailSchema });
 
 export const restablecerSchema = z
   .object({

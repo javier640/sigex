@@ -1,6 +1,9 @@
 /**
  * SIGEX · Bitácora de auditoría
  *
+ * Alcance (según el PDF): se audita cada creación, edición, cambio de
+ * estatus o eliminación de un EXPEDIENTE.
+ *
  * Reglas:
  *  - Solo inserción: este módulo no expone funciones para editar ni borrar
  *    registros (y la BD lo refuerza con un trigger, ver la migración
@@ -32,31 +35,28 @@ import "server-only";
 import { headers } from "next/headers";
 import type { Prisma } from "@prisma/client";
 import { db } from "@/lib/db";
+import { debug } from "console";
 
 // ─────────────────────────────────────────────
 // Catálogos
-// ────────────────────────────────────────────ƒ f─
+// ─────────────────────────────────────────────
 
 export const ACCIONES = {
-  // Expedientes y usuarios
   CREAR: "crear",
   EDITAR: "editar",
   CAMBIAR_ESTATUS: "cambiar_estatus",
   ELIMINAR: "eliminar",
-  ACTIVAR: "activar",
-  DESACTIVAR: "desactivar",
-  // Autenticación
-  LOGIN: "login",
-  LOGIN_FALLIDO: "login_fallido",
-  LOGOUT: "logout",
-  PASSWORD_RESTABLECIDA: "password_restablecida",
 } as const;
 
 export type Accion = (typeof ACCIONES)[keyof typeof ACCIONES];
 
+/**
+ * Hoy solo existe "expediente". La columna `entidad` se conserva porque
+ * forma parte del modelo mínimo del PDF y permitiría auditar otras
+ * entidades en el futuro sin cambiar la tabla.
+ */
 export const ENTIDADES = {
   EXPEDIENTE: "expediente",
-  USUARIO: "usuario",
 } as const;
 
 export type Entidad = (typeof ENTIDADES)[keyof typeof ENTIDADES];
@@ -147,7 +147,7 @@ export async function obtenerIpCliente(): Promise<string | null> {
 // ─────────────────────────────────────────────
 
 export type EntradaBitacora = {
-  /** null = acción anónima o del sistema (ej. login fallido de un correo inexistente). */
+  /** Quién hizo el cambio (null solo para procesos del sistema). */
   usuarioId: number | null;
   accion: Accion;
   entidad: Entidad;
@@ -180,17 +180,4 @@ export async function registrarBitacora(entrada: EntradaBitacora, cliente: Clien
       ip,
     },
   });
-}
-
-/**
- * Igual que registrarBitacora, pero nunca lanza error: si falla, solo lo
- * registra en consola. Para eventos donde la bitácora es informativa y
- * no debe impedir la operación (ej. registrar un logout).
- */
-export async function registrarBitacoraSinBloquear(entrada: EntradaBitacora): Promise<void> {
-  try {
-    await registrarBitacora(entrada);
-  } catch (error) {
-    console.error(`[bitacora] No se pudo registrar "${entrada.accion}" sobre ${entrada.entidad}:`, error);
-  }
 }
