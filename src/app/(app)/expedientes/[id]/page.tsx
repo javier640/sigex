@@ -49,6 +49,7 @@ export default async function DetalleExpedientePage({ params, searchParams }: Pr
   const puedeEditar = puedeEditarExpediente(usuario, expediente);
   const puedeCambiarEstatus = can(usuario, PERMISOS.EXPEDIENTES_CAMBIAR_ESTATUS);
   const puedeEliminar = can(usuario, PERMISOS.EXPEDIENTES_ELIMINAR);
+  const puedeVerBitacora = can(usuario, PERMISOS.BITACORA_VER);
 
   return (
     <div className="space-y-6">
@@ -126,6 +127,14 @@ export default async function DetalleExpedientePage({ params, searchParams }: Pr
                 </div>
               )}
             </dl>
+            {puedeVerBitacora && (
+              <Enlace
+                href={`/admin/bitacora?expediente=${encodeURIComponent(expediente.folio)}`}
+                className="mt-5 inline-block text-sm"
+              >
+                Ver historial de cambios
+              </Enlace>
+            )}
           </section>
         </aside>
       </div>
