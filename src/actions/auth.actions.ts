@@ -109,7 +109,7 @@ export async function solicitarRecuperacionAction(
   return { enviado: true, email };
 }
 
-───────────────────────────────────────────
+
 
 export type RestablecerState = {
   error?: string;
