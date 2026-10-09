@@ -1,12 +1,3 @@
-/**
- * GET /api/bitacora?pagina=1&usuarioId=3&accion=editar&desde=2026-10-01&hasta=2026-10-08&expediente=EXP-2026
- *
- *  - 200: { datos, paginacion }
- *  - 400: parámetros inválidos (ej. fecha mal formada o desde > hasta)
- *  - 401: sin sesión
- *  - 403: sin permiso bitacora:ver (todos excepto el Administrador)
- *  - 500: error inesperado
- */
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { verificarAcceso } from "@/lib/guards";

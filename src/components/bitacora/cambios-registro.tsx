@@ -1,9 +1,4 @@
-/**
- * Muestra qué cambió en un registro de bitácora, en lenguaje legible:
- *  - Creación:          los valores con los que nació el expediente
- *  - Edición / estatus: campo: anterior → nuevo
- *  - Baja:              aviso + los datos que tenía al darse de baja
- */
+
 import type { RegistroBitacora, ValorBitacora, ValoresBitacora } from "@/types/bitacora";
 import { CAMPO_EXPEDIENTE, ESTATUS, PRIORIDAD } from "@/lib/catalogos";
 import { formatearFechaHora } from "@/lib/formato";
@@ -69,7 +64,6 @@ export function CambiosRegistro({ registro }: { registro: RegistroBitacora }) {
     );
   }
 
-  // Edición y cambio de estatus: solo los campos que cambiaron
   const campos = [...new Set([...Object.keys(anteriores), ...Object.keys(nuevos)])];
   return (
     <ul className="space-y-2 text-sm">

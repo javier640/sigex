@@ -1,17 +1,5 @@
 "use server";
 
-/**
- * SIGEX · Server Actions de administración de usuarios
- *
- * Todas siguen el mismo orden:
- *   1. Verificar sesión y permiso (usuarios:gestionar)
- *   2. Validar la entrada con Zod
- *   3. Aplicar el cambio
- *   4. revalidatePath para refrescar las páginas afectadas
- *
- * Nota: según el PDF, la bitácora de auditoría cubre solo expedientes,
- * por eso estas acciones no la registran.
- */
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { Prisma } from "@prisma/client";
@@ -36,7 +24,6 @@ type CampoUsuario = "nombre" | "email" | "rolId" | "password" | "confirmacion";
 export type UsuarioFormState = {
   error?: string;
   fieldErrors?: Partial<Record<CampoUsuario, string[]>>;
-  /** Se devuelven para no borrar lo que el usuario escribió (nunca la contraseña). */
   valores?: { nombre: string; email: string; rolId: string };
 };
 
@@ -50,7 +37,6 @@ function leerValores(formData: FormData) {
   return { nombre: texto("nombre"), email: texto("email"), rolId: texto("rolId") };
 }
 
-/** P2002 = violación de llave única (aquí, el correo). */
 function esCorreoDuplicado(error: unknown): boolean {
   return error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002";
 }
@@ -60,9 +46,6 @@ async function existeRol(rolId: number): Promise<boolean> {
   return rol !== null;
 }
 
-// ─────────────────────────────────────────────
-// Crear
-// ─────────────────────────────────────────────
 
 export async function crearUsuarioAction(
   _estadoPrevio: UsuarioFormState,
@@ -100,14 +83,6 @@ export async function crearUsuarioAction(
   redirect(`${RUTA_LISTADO}?aviso=creado`);
 }
 
-// ─────────────────────────────────────────────
-// Editar
-// ─────────────────────────────────────────────
-
-/**
- * El id llega "amarrado" con .bind(null, id) desde la página de edición.
- * Aun así se trata como dato no confiable: se valida y se buscan permisos.
- */
 export async function editarUsuarioAction(
   usuarioId: number,
   _estadoPrevio: UsuarioFormState,
@@ -152,10 +127,6 @@ export async function editarUsuarioAction(
   revalidatePath(`${RUTA_LISTADO}/${usuarioId}/editar`);
   redirect(`${RUTA_LISTADO}?aviso=actualizado`);
 }
-
-// ─────────────────────────────────────────────
-// Activar / desactivar
-// ─────────────────────────────────────────────
 
 export async function cambiarEstadoUsuarioAction(
   _estadoPrevio: EstadoAccion,

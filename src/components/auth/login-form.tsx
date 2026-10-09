@@ -16,8 +16,6 @@ export function LoginForm({ redirectTo }: { redirectTo?: string }) {
   const errorPassword = estado.fieldErrors?.password?.[0];
 
   return (
-    // noValidate: los mensajes vienen de Zod en el servidor, así son
-    // consistentes y no dependen del navegador.
     <form action={formAction} noValidate className="space-y-6">
       {redirectTo && <input type="hidden" name="redirectTo" value={redirectTo} />}
 

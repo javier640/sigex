@@ -1,14 +1,3 @@
-/**
- * GET /api/expedientes?pagina=1&porPagina=10&busqueda=texto&estatus=abierto
- *
- *  - 200: { datos, paginacion }
- *  - 400: parámetros inválidos
- *  - 401: sin sesión
- *  - 403: sin permiso expedientes:ver
- *  - 500: error inesperado
- *
- * Lo consume el hook useExpedientes para paginar y buscar sin recargar la página.
- */
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { verificarAcceso } from "@/lib/guards";
@@ -35,7 +24,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const respuesta = await listarExpedientes(filtros.data);
+    const respuesta = await listarExpedientes(filtros.data, acceso.sesion.usuario.id);
     return NextResponse.json(respuesta, { headers: SIN_CACHE });
   } catch (error) {
     console.error("[GET /api/expedientes] Error inesperado:", error);

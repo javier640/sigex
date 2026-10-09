@@ -1,9 +1,3 @@
-/**
- * Layout del grupo (app): todas las rutas protegidas.
- *
- * Es un Server Component: obtiene la sesión, arma el menú filtrado por
- * permisos y pasa el usuario al SessionProvider para los Client Components.
- */
 import type { ReactNode } from "react";
 import { requerirSesion } from "@/lib/guards";
 import { construirMenu } from "@/lib/navegacion";

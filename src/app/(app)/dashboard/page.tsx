@@ -1,7 +1,3 @@
-/**
- * Panel de inicio: resumen de expedientes por estatus.
- * Server Component: consulta la BD directamente, sin pasar por la API.
- */
 import type { Metadata } from "next";
 import { db } from "@/lib/db";
 import { requerirSesion } from "@/lib/guards";

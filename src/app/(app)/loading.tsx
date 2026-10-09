@@ -1,7 +1,3 @@
-/**
- * Se muestra automáticamente mientras una página de (app) carga sus datos.
- * El menú lateral sigue visible porque pertenece al layout.
- */
 export default function Cargando() {
   return (
     <div role="status" aria-live="polite" className="animate-pulse space-y-6 motion-reduce:animate-none">

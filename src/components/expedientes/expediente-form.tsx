@@ -24,7 +24,6 @@ type Props = {
     prioridad: PrioridadExpediente;
     descripcion: string | null;
   };
-  /** A dónde lleva "Cancelar". */
   urlCancelar: string;
 };
 

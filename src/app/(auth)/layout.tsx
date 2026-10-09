@@ -1,11 +1,3 @@
-/**
- * Layout del grupo (auth): rutas públicas (login, recuperar, restablecer).
- * El paréntesis hace que "(auth)" no aparezca en la URL.
- *
- * En pantallas medianas o más grandes se divide en dos paneles:
- * identidad del sistema a la izquierda y formulario a la derecha.
- * En móvil solo se muestra el formulario con un encabezado compacto.
- */
 import type { ReactNode } from "react";
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
@@ -37,7 +29,6 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
   );
 }
 
-/** Ilustración decorativa: tres carpetas de expediente apiladas. */
 function PilaDeExpedientes() {
   const carpetas = [
     { posicion: "top-0 left-0", pestana: "bg-amber-400", cuerpo: "bg-amber-300" },

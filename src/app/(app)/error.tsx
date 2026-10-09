@@ -1,9 +1,5 @@
 "use client";
 
-/**
- * Captura errores inesperados al renderizar páginas de (app).
- * No muestra el detalle técnico al usuario; solo lo registra en consola.
- */
 import { useEffect } from "react";
 
 type Props = {

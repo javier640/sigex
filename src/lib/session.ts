@@ -1,16 +1,3 @@
-/**
- * SIGEX · Manejo de sesiones en base de datos
- *
- * Estrategia:
- *  - Se genera un token aleatorio de 32 bytes (crypto.randomBytes).
- *  - El token en claro viaja SOLO en la cookie httpOnly.
- *  - En la tabla `sesiones` se guarda su hash SHA-256 como `id`.
- *    Si alguien lee la tabla, no puede reutilizar esos valores.
- *
- * Importante: Next.js solo permite escribir o borrar cookies en
- * Server Actions y Route Handlers. Por eso `crearSesion` y `destruirSesion`
- * deben llamarse desde ahí, nunca desde un Server Component.
- */
 import "server-only";
 import { cache } from "react";
 import { cookies } from "next/headers";

@@ -1,10 +1,6 @@
 "use client";
 
-/**
- * Menú lateral. Recibe del servidor SOLO las opciones permitidas.
- *  - Escritorio (lg+): fijo a la izquierda.
- *  - Móvil: barra superior con botón que abre el menú como panel deslizable.
- */
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
@@ -14,7 +10,6 @@ import { Icono } from "@/components/ui/iconos";
 type Props = {
   secciones: SeccionMenu[];
   usuario: { nombre: string; rol: string };
-  /** Contenido al pie del menú (el botón de cerrar sesión). */
   pie: ReactNode;
 };
 
@@ -26,7 +21,6 @@ export function Sidebar({ secciones, usuario, pie }: Props) {
   const pathname = usePathname();
   const [abierto, setAbierto] = useState(false);
 
-  // Cerrar con Escape mientras el panel móvil está abierto
   useEffect(() => {
     if (!abierto) return;
     function alPresionarTecla(evento: KeyboardEvent) {
@@ -38,7 +32,6 @@ export function Sidebar({ secciones, usuario, pie }: Props) {
 
   return (
     <>
-      {/* Barra superior (solo móvil) */}
       <header className="sticky top-0 z-30 flex h-14 items-center justify-between bg-teal-900 px-4 text-white lg:hidden">
         <Marca />
         <button

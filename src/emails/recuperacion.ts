@@ -1,12 +1,3 @@
-/**
- * SIGEX · Plantilla del correo de recuperación de contraseña
- *
- * Los clientes de correo (Gmail, Outlook) no cargan hojas de estilo ni
- * Tailwind: solo respetan estilos en línea y tablas. Por eso aquí los
- * colores van como hexadecimales en `style`. Son los equivalentes de la
- * paleta de Tailwind que usa la app (teal-800, slate-900, slate-600, slate-100).
- */
-
 const COLORES = {
   teal800: "#115e59",
   slate900: "#0f172a",

@@ -18,27 +18,28 @@ export type FiltrosListado = {
   pagina: number;
   busqueda: string;
   estatus: EstatusExpediente | "";
+  mios: boolean ;
 };
 
 type Resultado = {
-  /** Identifica a qué combinación de filtros corresponde este resultado. */
   clave: string;
   datos?: RespuestaListadoExpedientes;
   error?: string;
 };
 
-export function useExpedientes({ pagina, busqueda, estatus }: FiltrosListado) {
+export function useExpedientes({ pagina, busqueda, estatus,mios }: FiltrosListado) {
   const router = useRouter();
   const [resultado, setResultado] = useState<Resultado | null>(null);
   const [version, setVersion] = useState(0);
 
-  const clave = `${pagina}|${busqueda}|${estatus}|${version}`;
+  const clave = `${pagina}|${busqueda}|${estatus}|${mios}|${version}`;
 
   useEffect(() => {
     const controlador = new AbortController();
     const parametros = new URLSearchParams({ pagina: String(pagina) });
     if (busqueda) parametros.set("busqueda", busqueda);
     if (estatus) parametros.set("estatus", estatus);
+    if (mios) parametros.set("mios", "1");
 
     fetch(`/api/expedientes?${parametros}`, { signal: controlador.signal, cache: "no-store" })
       .then(async (respuesta) => {
@@ -60,9 +61,8 @@ export function useExpedientes({ pagina, busqueda, estatus }: FiltrosListado) {
       });
 
     return () => controlador.abort();
-  }, [clave, pagina, busqueda, estatus, router]);
+  }, [clave, pagina, busqueda, estatus, mios, router]);
 
-  /** Vuelve a pedir la página actual (ej. después de eliminar un expediente). */
   const recargar = useCallback(() => setVersion((v) => v + 1), []);
 
   const actualizado = resultado?.clave === clave;

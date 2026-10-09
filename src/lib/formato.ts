@@ -1,9 +1,4 @@
-/**
- * SIGEX · Formato de fechas
- *
- * Se fija la zona horaria para que el resultado no dependa de dónde corra
- * el servidor (Vercel usa UTC).
- */
+
 const ZONA_HORARIA = "America/Mexico_City";
 
 const FORMATO_FECHA = new Intl.DateTimeFormat("es-MX", {

@@ -1,6 +1,3 @@
-/**
- * SIGEX · Consultas de usuarios (solo servidor)
- */
 import "server-only";
 import { db } from "@/lib/db";
 

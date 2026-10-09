@@ -1,12 +1,6 @@
 "use client";
 
-/**
- * Baja lógica con confirmación en línea.
- *
- * Usa useTransition para llamar a la Server Action como una función normal
- * (sin <form>): así puede ejecutar algo DESPUÉS de que termine, como
- * recargar el listado o navegar a otra página.
- */
+
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { eliminarExpedienteAction } from "@/actions/expedientes.actions";
@@ -14,9 +8,7 @@ import { eliminarExpedienteAction } from "@/actions/expedientes.actions";
 type Props = {
   expedienteId: number;
   folio: string;
-  /** Se ejecuta al eliminar (ej. recargar el listado). */
   alEliminar?: () => void;
-  /** Si se indica, navega a esta ruta al eliminar (ej. desde el detalle). */
   redirigirA?: string;
   tamano?: "normal" | "chico";
 };

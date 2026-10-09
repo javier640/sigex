@@ -1,14 +1,3 @@
-/**
- * GET /api/auth/me
- *
- * Devuelve el usuario de la sesión actual y sus permisos.
- *  - 200: { usuario, expiraEn }
- *  - 401: no hay sesión válida
- *  - 500: error inesperado
- *
- * Lo consume useSession() para detectar sesiones vencidas o cambios de
- * permisos sin recargar la página.
- */
 import { NextResponse } from "next/server";
 import { verificarAcceso } from "@/lib/guards";
 

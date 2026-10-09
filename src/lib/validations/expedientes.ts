@@ -69,6 +69,7 @@ export const filtrosExpedientesSchema = z.object({
       .transform((v) => v || undefined),
   ),
   estatus: z.preprocess(vacioAIndefinido, z.enum(ESTATUS_VALORES).optional()),
+  mios: z.preprocess(vacioAIndefinido, z.literal("1").optional()).transform((v) => v === "1"),
 });
 
 export type FiltrosExpedientes = z.infer<typeof filtrosExpedientesSchema>;

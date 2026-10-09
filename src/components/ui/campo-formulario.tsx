@@ -1,8 +1,3 @@
-/**
- * Campo de formulario accesible: etiqueta, input, texto de ayuda y error.
- * Conecta todo con htmlFor, aria-invalid y aria-describedby para que los
- * lectores de pantalla anuncien la ayuda y el error junto con el campo.
- */
 import type { InputHTMLAttributes, ReactNode } from "react";
 
 type Props = Omit<InputHTMLAttributes<HTMLInputElement>, "id" | "className"> & {
@@ -10,7 +5,6 @@ type Props = Omit<InputHTMLAttributes<HTMLInputElement>, "id" | "className"> & {
   label: string;
   error?: string;
   ayuda?: string;
-  /** Elemento opcional a la derecha de la etiqueta (ej. un enlace). */
   accesorio?: ReactNode;
 };
 

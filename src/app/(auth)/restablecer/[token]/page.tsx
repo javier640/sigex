@@ -6,8 +6,6 @@ import { RestablecerForm } from "@/components/auth/restablecer-form";
 
 export const metadata: Metadata = {
   title: "Nueva contraseña · SIGEX",
-  // El token va en la URL: no-referrer evita que se filtre a otros
-  // sitios a través del encabezado Referer si el usuario sale de aquí.
   referrer: "no-referrer",
 };
 
@@ -17,9 +15,6 @@ type Props = {
 
 export default async function RestablecerPage({ params }: Props) {
   const { token } = await params;
-
-  // Se valida al abrir el enlace para no mostrar un formulario inútil.
-  // La Server Action vuelve a validarlo al guardar (pudo vencer mientras tanto).
   const registro = await buscarTokenRecuperacionValido(token);
 
   if (!registro) {

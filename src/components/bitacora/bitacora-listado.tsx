@@ -1,9 +1,6 @@
 "use client";
 
-/**
- * Consulta de la bitácora con filtros por usuario, acción, fecha y expediente.
- * Mismo patrón que el listado de expedientes: estado local + API + URL.
- */
+
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useDebounce } from "@/hooks/use-debounce";
@@ -31,7 +28,6 @@ export function BitacoraListado({ usuarios, filtrosIniciales }: Props) {
   const [textoExpediente, setTextoExpediente] = useState(filtrosIniciales.expediente);
   const expediente = useDebounce(textoExpediente.trim());
 
-  // La página vuelve a 1 cuando cambia cualquier filtro (mismo patrón que expedientes)
   const claveFiltros = [usuarioId, accion, desde, hasta, expediente].join("|");
   const [paginacion, setPaginacion] = useState({ pagina: filtrosIniciales.pagina, claveFiltros });
   const pagina = paginacion.claveFiltros === claveFiltros ? paginacion.pagina : 1;

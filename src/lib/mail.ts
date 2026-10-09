@@ -28,10 +28,6 @@ type Correo = {
 
 export type ResultadoEnvio = { ok: true; id: string } | { ok: false; error: string };
 
-/**
- * Envía un correo. Nunca lanza excepciones: devuelve un resultado para que
- * quien lo llame decida qué hacer (registrar el error, reintentar, etc.).
- */
 export async function enviarCorreo({ para, asunto, html, texto }: Correo): Promise<ResultadoEnvio> {
   try {
     const { data, error } = await obtenerCliente().emails.send({

@@ -16,7 +16,6 @@ import type { UsuarioSesion } from "@/lib/session";
 
 export type ContextoSesion = {
   usuario: UsuarioSesion;
-  /** Vuelve a consultar la sesión en el servidor. */
   refrescar: () => Promise<void>;
 };
 
@@ -36,13 +35,10 @@ export function SessionProvider({ usuario, children }: { usuario: UsuarioSesion;
       if (!respuesta.ok) return;
 
       const datos: { usuario: UsuarioSesion } = await respuesta.json();
-      // Si el rol o los permisos cambiaron, se vuelve a renderizar el
-      // layout en el servidor para actualizar menú y botones.
       if (JSON.stringify(datos.usuario) !== JSON.stringify(usuario)) {
         router.refresh();
       }
     } catch {
-      // Sin red: no se hace nada; el siguiente intento lo resolverá
     }
   }, [router, usuario]);
 

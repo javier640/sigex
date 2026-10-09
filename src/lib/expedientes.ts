@@ -1,6 +1,4 @@
-/**
- * SIGEX · Consultas y utilidades de expedientes (solo servidor)
- */
+
 import "server-only";
 import { randomBytes } from "node:crypto";
 import { db } from "@/lib/db";
@@ -55,10 +53,12 @@ export async function listarExpedientes({
   porPagina,
   busqueda,
   estatus,
-}: FiltrosExpedientes): Promise<RespuestaListadoExpedientes> {
+  mios
+}: FiltrosExpedientes ,usuarioId: number ): Promise<RespuestaListadoExpedientes> {
   const where = {
     eliminadoEn: null,
     ...(estatus && { estatus }),
+    ...(mios && { creadoPorId: usuarioId }),
     ...(busqueda && {
       OR: [
         { folio: { contains: busqueda, mode: "insensitive" as const } },

@@ -27,9 +27,9 @@ import { Enlace } from "@/components/ui/enlace";
 import { Insignia } from "@/components/ui/insignia";
 import { Paginacion } from "@/components/ui/paginacion";
 import { BotonEliminarExpediente } from "@/components/expedientes/boton-eliminar-expediente";
-
+import { usePermission } from "@/hooks/use-permission";
 type Props = {
-  filtrosIniciales: { pagina: number; busqueda: string; estatus: EstatusExpediente | "" };
+  filtrosIniciales: { pagina: number; busqueda: string; estatus: EstatusExpediente | ""; mios: boolean };
 };
 
 export function ExpedientesListado({ filtrosIniciales }: Props) {
@@ -37,37 +37,40 @@ export function ExpedientesListado({ filtrosIniciales }: Props) {
 
   const [textoBusqueda, setTextoBusqueda] = useState(filtrosIniciales.busqueda);
   const [estatus, setEstatus] = useState<EstatusExpediente | "">(filtrosIniciales.estatus);
+  const [soloMios, setSoloMios] = useState(filtrosIniciales.mios);
+
+  // Solo aplica si el usuario puede crear expedientes (si no, no tiene "propios")
+  const puedeCrear = usePermission(PERMISOS.EXPEDIENTES_CREAR);
+  const mios = soloMios && puedeCrear;
   const busqueda = useDebounce(textoBusqueda.trim());
 
   // La página vuelve a 1 cuando cambian los filtros. Se guarda junto con
   // la combinación de filtros a la que pertenece: si esa combinación ya no
   // es la actual, la página vigente es 1 (sin efectos ni renders extra).
-  const claveFiltros = `${busqueda}|${estatus}`;
+  const claveFiltros = `${busqueda}|${estatus}|${mios}`;
   const [paginacion, setPaginacion] = useState({ pagina: filtrosIniciales.pagina, claveFiltros });
   const pagina = paginacion.claveFiltros === claveFiltros ? paginacion.pagina : 1;
 
-  const { datos, cargando, error, recargar } = useExpedientes({ pagina, busqueda, estatus });
+  const { datos, cargando, error, recargar } = useExpedientes({ pagina, busqueda, estatus, mios });
 
   // Reflejar filtros en la URL sin provocar una navegación
   useEffect(() => {
     const parametros = new URLSearchParams();
     if (busqueda) parametros.set("busqueda", busqueda);
     if (estatus) parametros.set("estatus", estatus);
+    if (mios) parametros.set("mios", "1");
     if (pagina > 1) parametros.set("pagina", String(pagina));
     const consulta = parametros.toString();
     window.history.replaceState(null, "", consulta ? `?${consulta}` : window.location.pathname);
-  }, [busqueda, estatus, pagina]);
+  }, [busqueda, estatus, mios, pagina]);
 
   const expedientes = datos?.datos ?? [];
-  const hayFiltros = Boolean(busqueda || estatus);
+  const hayFiltros = Boolean(busqueda || estatus || mios);
 
   return (
     <div className="space-y-4">
       {/* Filtros: no es un <form> que se envíe; cada cambio actualiza el listado */}
-      <div
-        role="search"
-        className="grid gap-4 rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-900/5 sm:grid-cols-3 sm:items-end"
-      >
+      <div role="search" className="grid gap-4 rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-900/5 sm:grid-cols-4 sm:items-end">
         <div className="sm:col-span-2">
           <CampoFormulario
             id="busqueda"
@@ -91,6 +94,17 @@ export function ExpedientesListado({ filtrosIniciales }: Props) {
             </option>
           ))}
         </CampoSelect>
+        <Can permiso={PERMISOS.EXPEDIENTES_CREAR}>
+          <CampoSelect
+            id="mios"
+            label="Mostrar"
+            value={soloMios ? "mios" : ""}
+            onChange={(e) => setSoloMios(e.target.value === "mios")}
+          >
+            <option value="">Todos</option>
+            <option value="mios">Solo los míos</option>
+          </CampoSelect>
+        </Can>
       </div>
 
       {error && (

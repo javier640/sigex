@@ -1,10 +1,6 @@
 "use client";
 
-/**
- * Formulario de alta y edición de usuarios.
- * La misma pieza sirve para ambos casos: cambia la acción que recibe
- * y si muestra o no los campos de contraseña.
- */
+
 import { useActionState } from "react";
 import type { UsuarioFormState } from "@/actions/usuarios.actions";
 import { Alerta } from "@/components/ui/alerta";
@@ -21,7 +17,6 @@ type Props = {
   accion: (estado: UsuarioFormState, formData: FormData) => Promise<UsuarioFormState>;
   roles: Rol[];
   inicial?: { nombre: string; email: string; rolId: number };
-  /** true cuando el administrador se edita a sí mismo: no puede cambiar su rol. */
   rolBloqueado?: boolean;
 };
 

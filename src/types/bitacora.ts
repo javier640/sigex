@@ -1,6 +1,4 @@
-/**
- * SIGEX · Contrato de GET /api/bitacora (servidor → cliente)
- */
+
 import type { Paginacion } from "@/types/expedientes";
 import type { AccionBitacora } from "@/lib/validations/bitacora";
 

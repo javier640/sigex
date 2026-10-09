@@ -15,7 +15,6 @@ export function RecuperarForm({ minutos }: { minutos: number }) {
   if (estado.enviado) {
     return (
       <div className="space-y-6">
-        {/* Mismo mensaje exista o no el correo: evita la enumeración de usuarios */}
         <Alerta variante="exito">
           Si <strong className="font-semibold">{estado.email}</strong> corresponde a una cuenta activa,
           recibirás un correo con un enlace para definir una nueva contraseña. El enlace vence en{" "}

@@ -1,8 +1,4 @@
-/**
- * Mensaje destacado para errores, confirmaciones o información.
- * Los errores usan role="alert" (los lectores de pantalla los anuncian
- * de inmediato); el resto usa role="status", que es menos intrusivo.
- */
+
 import type { ReactNode } from "react";
 
 type Variante = "error" | "exito" | "info";

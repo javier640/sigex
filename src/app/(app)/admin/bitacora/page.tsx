@@ -20,7 +20,6 @@ type Props = {
 export default async function BitacoraPage({ searchParams }: Props) {
   await requerirPermiso(PERMISOS.BITACORA_VER);
 
-  // Filtros iniciales desde la URL (ej. al llegar desde el detalle de un expediente)
   const filtros = filtrosBitacoraSchema.safeParse(await searchParams);
   const iniciales = filtros.success ? filtros.data : filtrosBitacoraSchema.parse({});
 

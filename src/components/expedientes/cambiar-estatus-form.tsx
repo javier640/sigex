@@ -1,9 +1,6 @@
 "use client";
 
-/**
- * Cambio de estatus desde el detalle del expediente.
- * Solo se muestra a quien tiene expedientes:cambiar_estatus (Admin, Supervisor).
- */
+
 import { useActionState } from "react";
 import type { EstatusExpediente } from "@prisma/client";
 import { cambiarEstatusAction, type EstadoAccion } from "@/actions/expedientes.actions";

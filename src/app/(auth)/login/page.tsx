@@ -9,16 +9,13 @@ export const metadata: Metadata = {
 };
 
 type Props = {
-  // En Next.js 15+ searchParams es una Promise
   searchParams: Promise<{ from?: string | string[]; restablecida?: string }>;
 };
 
 export default async function LoginPage({ searchParams }: Props) {
-  // Si ya hay sesión válida, no tiene sentido mostrar el login
   if (await obtenerSesion()) redirect("/dashboard");
 
   const { from, restablecida } = await searchParams;
-  // Se pasa tal cual; la Server Action valida que sea una ruta interna
   const redirectTo = typeof from === "string" ? from : undefined;
 
   return (

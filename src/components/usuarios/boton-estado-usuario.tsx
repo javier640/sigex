@@ -1,10 +1,6 @@
 "use client";
 
-/**
- * Activa o desactiva un usuario desde el listado.
- * Desactivar pide confirmación en línea (sin ventanas emergentes) porque
- * cierra todas las sesiones del usuario de inmediato.
- */
+
 import { useActionState, useState } from "react";
 import { cambiarEstadoUsuarioAction, type EstadoAccion } from "@/actions/usuarios.actions";
 import { SubmitButton } from "@/components/ui/submit-button";

@@ -1,8 +1,6 @@
 "use server";
 
-/**
- * SIGEX · Server Actions de autenticación
- */
+
 import { after } from "next/server";
 import { redirect } from "next/navigation";
 import { z } from "zod";
@@ -18,25 +16,16 @@ function textoDe(valor: FormDataEntryValue | null): string {
   return typeof valor === "string" ? valor : "";
 }
 
-// ─────────────────────────────────────────────
-// Login
-// ─────────────────────────────────────────────
-
 export type LoginState = {
   error?: string;
   fieldErrors?: { email?: string[]; password?: string[] };
-  /** Se devuelve para no obligar al usuario a reescribir su correo. */
   email?: string;
 };
 
 const MENSAJE_CREDENCIALES = "Correo o contraseña incorrectos.";
 const DESTINO_DEFAULT = "/dashboard";
 
-/**
- * Solo permite redirigir a rutas internas. Evita el "open redirect":
- * que alguien comparta /login?from=https://sitio-falso.com y, tras
- * iniciar sesión, la víctima termine en un sitio externo.
- */
+
 function destinoSeguro(valor: FormDataEntryValue | null): string {
   if (typeof valor !== "string") return DESTINO_DEFAULT;
   const esInterna = valor.startsWith("/") && !valor.startsWith("//") && !valor.startsWith("/\\");
@@ -47,7 +36,6 @@ function destinoSeguro(valor: FormDataEntryValue | null): string {
 export async function loginAction(_estadoPrevio: LoginState, formData: FormData): Promise<LoginState> {
   const emailIngresado = textoDe(formData.get("email"));
 
-  // 1. Validar entrada
   const resultado = loginSchema.safeParse({
     email: formData.get("email"),
     password: formData.get("password"),
@@ -60,7 +48,6 @@ export async function loginAction(_estadoPrevio: LoginState, formData: FormData)
   const { email, password } = resultado.data;
 
   try {
-    // 2. Buscar usuario
     const usuario = await db.usuario.findUnique({
       where: { email },
       select: { id: true, passwordHash: true, activo: true },
@@ -71,38 +58,27 @@ export async function loginAction(_estadoPrevio: LoginState, formData: FormData)
       return { error: MENSAJE_CREDENCIALES, email };
     }
 
-    // 3. Verificar contraseña ANTES de revisar si está activo,
-    //    para que ambos casos tarden lo mismo.
     const passwordValida = await verificarPassword(password, usuario.passwordHash);
 
-    // 4. Mismo mensaje para contraseña incorrecta y usuario inactivo
     if (!passwordValida || !usuario.activo) {
       return { error: MENSAJE_CREDENCIALES, email };
     }
 
-    // 5. Crear sesión en BD y cookie httpOnly
     await crearSesion(usuario.id);
   } catch (error) {
     console.error("[loginAction] Error inesperado:", error);
     return { error: MENSAJE_ERROR_SERVIDOR, email };
   }
 
-  // redirect() lanza una excepción interna de Next: va FUERA del try/catch
   redirect(destinoSeguro(formData.get("redirectTo")));
 }
 
-// ─────────────────────────────────────────────
-// Logout
-// ─────────────────────────────────────────────
 
 export async function logoutAction(): Promise<void> {
   await destruirSesion();
   redirect("/login");
 }
 
-// ─────────────────────────────────────────────
-// Solicitar recuperación
-// ─────────────────────────────────────────────
 
 export type RecuperarState = {
   enviado?: boolean;
@@ -122,10 +98,6 @@ export async function solicitarRecuperacionAction(
 
   const { email } = resultado.data;
 
-  // after() ejecuta el trabajo DESPUÉS de enviar la respuesta. Así la
-  // respuesta tarda lo mismo exista o no el correo (consultar la BD y
-  // llamar a Resend toma tiempo) y nadie puede deducir qué cuentas existen
-  // midiendo tiempos. Los errores se registran, nunca se muestran.
   after(async () => {
     try {
       await procesarSolicitudRecuperacion(email);
@@ -137,9 +109,7 @@ export async function solicitarRecuperacionAction(
   return { enviado: true, email };
 }
 
-// ─────────────────────────────────────────────
-// Aplicar restablecimiento
-// ─────────────────────────────────────────────
+───────────────────────────────────────────
 
 export type RestablecerState = {
   error?: string;

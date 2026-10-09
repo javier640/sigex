@@ -1,6 +1,4 @@
-/**
- * Enlace con apariencia de botón (para navegar, no para enviar formularios).
- */
+
 import Link from "next/link";
 import type { ComponentProps } from "react";
 

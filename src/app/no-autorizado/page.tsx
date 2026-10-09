@@ -1,7 +1,4 @@
-/**
- * Página a la que redirige el proxy (y requerirPermiso) cuando el usuario
- * tiene sesión pero le falta el permiso para la ruta que pidió.
- */
+
 import type { Metadata } from "next";
 import { requerirSesion } from "@/lib/guards";
 import { Enlace } from "@/components/ui/enlace";

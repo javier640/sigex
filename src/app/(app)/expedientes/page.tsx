@@ -51,6 +51,7 @@ export default async function ExpedientesPage({ searchParams }: Props) {
           pagina: iniciales.pagina,
           busqueda: iniciales.busqueda ?? "",
           estatus: iniciales.estatus ?? "",
+          mios: iniciales.mios ?? "",
         }}
       />
     </div>

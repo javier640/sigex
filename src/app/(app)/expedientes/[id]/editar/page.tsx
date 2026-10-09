@@ -1,8 +1,3 @@
-/**
- * Edición de un expediente.
- * El proxy ya verificó expedientes:editar; aquí además se aplica la regla
- * "editar propios", que necesita el registro de la BD para saber quién lo creó.
- */
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { requerirPermiso } from "@/lib/guards";

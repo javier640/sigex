@@ -1,6 +1,3 @@
-/**
- * SIGEX · Utilidades de tokens aleatorios
- */
 import "server-only";
 import { createHash, randomBytes } from "node:crypto";
 

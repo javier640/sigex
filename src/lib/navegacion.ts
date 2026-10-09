@@ -1,12 +1,3 @@
-/**
- * SIGEX · Definición del menú lateral
- *
- * El filtrado por permisos ocurre en el SERVIDOR (layout de (app)): al
- * navegador solo llegan las opciones permitidas. Aun así, ocultar una
- * opción no es seguridad: el proxy y cada página validan de nuevo.
- *
- * Los permisos aquí deben coincidir con REGLAS_RUTAS de permissions.ts.
- */
 import { can, PERMISOS, type Permiso, type SujetoConPermisos } from "@/lib/permissions";
 
 export type IconoMenu = "inicio" | "expedientes" | "usuarios" | "bitacora";
@@ -32,7 +23,6 @@ const MENU: { titulo?: string; items: DefinicionItem[] }[] = [
   },
 ];
 
-/** Devuelve solo las secciones y opciones a las que el usuario tiene acceso. */
 export function construirMenu(usuario: SujetoConPermisos): SeccionMenu[] {
   return MENU.map((seccion) => ({
     titulo: seccion.titulo,

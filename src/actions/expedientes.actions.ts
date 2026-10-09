@@ -1,14 +1,6 @@
 "use server";
 
-/**
- * SIGEX · Server Actions de expedientes
- *
- * Cada acción:
- *   1. Verifica sesión y permiso en el servidor
- *   2. Valida la entrada con Zod
- *   3. Aplica el cambio y registra la bitácora en UNA transacción
- *   4. Llama a revalidatePath para refrescar las páginas afectadas
- */
+
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
@@ -52,9 +44,6 @@ function revalidarExpediente(id?: number) {
   if (id) revalidatePath(`/expedientes/${id}`);
 }
 
-// ─────────────────────────────────────────────
-// Crear
-// ─────────────────────────────────────────────
 
 export async function crearExpedienteAction(
   _estadoPrevio: ExpedienteFormState,
@@ -74,19 +63,16 @@ export async function crearExpedienteAction(
 
   try {
     nuevoId = await db.$transaction(async (tx) => {
-      // 1. Insertar con folio provisional para obtener el id
       const creado = await tx.expediente.create({
         data: { ...resultado.data, folio: folioTemporal(), creadoPorId: usuarioId },
         select: { id: true },
       });
 
-      // 2. Asignar el folio definitivo derivado del id
       const expediente = await tx.expediente.update({
         where: { id: creado.id },
         data: { folio: generarFolio(creado.id) },
       });
 
-      // 3. Bitácora: no hay valores anteriores, solo los nuevos
       await registrarBitacora(
         {
           usuarioId,
@@ -109,14 +95,7 @@ export async function crearExpedienteAction(
   redirect(`/expedientes/${nuevoId}?aviso=creado`);
 }
 
-// ─────────────────────────────────────────────
-// Editar
-// ─────────────────────────────────────────────
 
-/**
- * El id llega con .bind(null, id) desde la página de edición.
- * Se valida de nuevo porque cualquier dato que viene del cliente es manipulable.
- */
 export async function editarExpedienteAction(
   expedienteId: number,
   _estadoPrevio: ExpedienteFormState,
@@ -142,7 +121,6 @@ export async function editarExpedienteAction(
       const actual = await tx.expediente.findFirst({ where: { id: id.data, eliminadoEn: null } });
       if (!actual) return "no-existe" as const;
 
-      // Regla "editar propios": se valida con el registro real de la BD
       if (!puedeEditarExpediente(usuario, actual)) return "sin-permiso" as const;
 
       const cambios = calcularCambios(
@@ -179,10 +157,6 @@ export async function editarExpedienteAction(
   revalidarExpediente(id.data);
   redirect(`/expedientes/${id.data}?aviso=actualizado`);
 }
-
-// ─────────────────────────────────────────────
-// Cambiar estatus
-// ─────────────────────────────────────────────
 
 export async function cambiarEstatusAction(_estadoPrevio: EstadoAccion, formData: FormData): Promise<EstadoAccion> {
   const acceso = await verificarAcceso(PERMISOS.EXPEDIENTES_CAMBIAR_ESTATUS);
@@ -232,14 +206,7 @@ export async function cambiarEstatusAction(_estadoPrevio: EstadoAccion, formData
   return { ok: true };
 }
 
-// ─────────────────────────────────────────────
-// Eliminar (baja lógica)
-// ─────────────────────────────────────────────
 
-/**
- * Se llama directamente desde el cliente con useTransition (no desde un
- * <form>), por eso recibe el id como argumento y no un FormData.
- */
 export async function eliminarExpedienteAction(expedienteId: number): Promise<EstadoAccion> {
   const acceso = await verificarAcceso(PERMISOS.EXPEDIENTES_ELIMINAR);
   if (!acceso.ok) return { error: acceso.mensaje };
@@ -259,7 +226,6 @@ export async function eliminarExpedienteAction(expedienteId: number): Promise<Es
         data: { eliminadoEn: new Date(), actualizadoPorId: usuarioId },
       });
 
-      // Se guarda la instantánea completa: queda constancia de qué se dio de baja
       await registrarBitacora(
         {
           usuarioId,
